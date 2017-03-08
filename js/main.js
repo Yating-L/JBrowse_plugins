@@ -13,7 +13,6 @@ return declare( JBrowsePlugin,
 
         // do anything you need to initialize your plugin here
         console.log( "MyPlugin plugin starting" );
-
     }
 });
 });
