@@ -21,7 +21,10 @@ function(
     return declare([CanvasFeatures, CondonTable],{
         _buildSequenceContainer: function(proteinSeq) {
             var subject = proteinSeq['subject'];
+            var subject_str = '';
             var query = proteinSeq['query'];
+            var gap = proteinSeq['Gap'].split(' ');
+            var insert;
             var num = subject.length;
             var table = '';
             var container = document.createElement('div');
@@ -34,17 +37,36 @@ function(
             textArea.className = 'fasta';
             textArea.readOnly = true;
 
+            
+            var start = 0, end = 0, i;
+    
+            for (i = 0; i < gap.length; i++) {
+                if (gap[i][0] ==='I') {
+                    insert = parseInt(gap[i].substring(1, gap[i].length));
+                    subject_str += subject.slice(start, end);
+                    start = end;
+                    for (var j = 0; j < insert; j++) {
+                        subject_str += '-';
+                    }
+                }
+                else {
+                    end += parseInt(gap[i].substring(1, gap[i].length));
+                }
+            }
+            if (start < end) {
+                subject_str += subject.slice(start, end);
+            }
+
             var match_str = '';
-            for (var i = 0; i < num; i++) {
-                table += subject[i];
-                if (query[i] === subject[i])
+            table += query + '\n';
+            for (i = 0; i < num; i++) {
+                if (query[i] === subject_str[i])
                     match_str += '|';
                 else
                     match_str += ' ';
             }
-            table += '\n';
             table += match_str + '\n';
-            table += query + '\n';
+            table += subject_str + '\n';
             textArea.value = table;
             container.appendChild(textArea);
             return container;
@@ -63,21 +85,30 @@ function(
         _renderTranslation: function(feature, seq) {
             var reading_frame = feature.get('reading_frame');
             var query = feature.get('query');
-            var offset = parseInt(reading_frame[0]),
-                extraBases = (seq.length - offset) % 3,
-                seqSliced = seq.slice(offset, seq.length - extraBases),
-                proteinSeq = {
-                    'subject' : '',
-                    'query' : query
-                };
+            var gap = feature.get('Gap');
+            var strand = parseInt(reading_frame[1]);
+           // console.log(seq); 
+            if (strand < 0) {
+                seq = Util.revcom(seq);
+            }                            
+            var extraBases = seq.length % 3;
+            var seqSliced = seq.slice(0, seq.length - extraBases);
+            var seqlen = seqSliced.length;
+            var proteinSeq = {
+                'subject' : '',
+                'query' : query,
+                'Gap' : ''
+            };
+           // console.log(strand);
             //console.log(seqSliced)
-            for( var i = 0; i < seqSliced.length; i += 3 ) {
+            for( var i = 0; i < seqlen; i += 3 ) {
                 var nextCodon = seqSliced.slice(i, i + 3);
                 var aminoAcid = this._codonTable[nextCodon] || '#';
                 proteinSeq['subject'] += aminoAcid;
                // console.log(proteinSeq);
             }
-            //console.log(proteinSeq);
+            //console.log(proteinSeq['subject']);
+            proteinSeq['Gap'] = gap;
             return proteinSeq;
         },
 
