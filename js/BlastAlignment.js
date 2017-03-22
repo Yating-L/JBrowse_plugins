@@ -71,11 +71,12 @@ function(
                 '  Score = ' + match_part['score'] + '  Expect = ' + match_part['expect'] +
                 '  Identities = ' + identities + ' / ' + sub_len + ' (' + iden_percent + '%) ' + 
                 '  Positives = ' + positives + ' / ' + sub_len + ' (' + posi_percent + '%) ' +
-                '  Gaps = ' + gaps + ' / ' + sub_len + ' (' + gaps_percent + '%) ' + '</h3>';
+                '  Gaps = ' + gaps + ' / ' + sub_len + ' (' + gaps_percent + '%) ' + 
+                '  Frame = ' + match_part['frame'] +'</h3>';
                 table += match_header;
                 align_len = query.length;
                 align_start = 0;
-                query_start = 1;
+                query_start = parseInt(query_name.split(' ')[1]);
                 while (align_start < align_len) {
                     sub_query = query.substring(align_start, align_start + 60);
                     sub_sbjct = subject_str.substring(align_start, align_start + 60);
@@ -87,12 +88,17 @@ function(
                     query_title_len = query_title.length;
                     sbjct_title_len = sbjct_title.length;
                     //Make sure the indents are the same for query, match and sbjct
-                    if (query_title_len == sbjct_title_len)
-                        match_title = new Array(sbjct_title_len + 1).join(' ');
-                    else if (query_title_len < sbjct_title_len) {
+                    if (query_title_len < sbjct_title_len) {
                         query_title += new Array(sbjct_title_len - query_title_len + 1).join(' ');
                         match_title = new Array(sbjct_title_len + 1).join(' ');
                     }
+                    else if (query_title_len > sbjct_title_len) {
+                        sbjct_title += new Array(query_title_len - sbjct_title_len + 1).join(' ');
+                        match_title = new Array(query_title_len + 1).join(' ');
+                    }
+                    else
+                        match_title = new Array(sbjct_title_len + 1).join(' ');
+
                     table += '<pre>' + query_title + query.substring(align_start, align_start + 60) + ' ' + query_end +'\n' 
                      + match_title +match_str.substring(align_start, align_start + 60) + '\n' 
                     + sbjct_title +subject_str.substring(align_start, align_start + 60) + ' ' + sbjct_end + '\n' + '</pre>' + '<br>';
