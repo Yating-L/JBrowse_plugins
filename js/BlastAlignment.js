@@ -27,11 +27,16 @@ function(
             var container = domConstruct.create('div'),
                 seq_id = alignments['seqid'],
                 matches = alignments['matches'],
+                length = alignments['length'],
+                match_num = alignments['match_num'],
+                start = alignments['start'],
+                header = '<h1>' + seq_id + ' Length = ' + length + 
+            ' Matches = ' + match_num + '</h1>',
                 num = matches.length,
                 alignment_blocks = '',
                 match_part,
                 region = domConstruct.create('h1', {
-                    innerHTML: this._getHeader(alignments),
+                    innerHTML: header,
                     className: 'region',
                     style: {
                         fontWeight: 'bold'
@@ -41,7 +46,7 @@ function(
 
             for (i = 0; i < num; i++) {
                 match_part = matches[i];
-                alignment_blocks += this._getMatches(seq_id, match_part);
+                alignment_blocks += this._getMatches(seq_id, match_part, start);
             }
             domConstruct.create('div', {
                 innerHTML: alignment_blocks
@@ -49,16 +54,6 @@ function(
 
             return container;
         }, 
-
-        _getHeader: function(alignments) {
-            var length = alignments['length'],
-                match_num = alignments['match_num'],
-                seq_id = alignments['seqid'],
-                header = '<h1>' + seq_id + ' Length = ' + length + 
-            ' Matches = ' + match_num + '</h1>';
-
-            return header;
-        },
 
         _getMatches: function(seq_id, match_part) {
             var query_name = match_part['query_name'],
@@ -149,11 +144,12 @@ function(
                     'seqid' : feature.get('seq_id'),
                     'length' : feature.get('end') - start + 1,
                     'match_num' : feature.get('match_num'),
+                    'start' : start,
                     'matches' : []
                 },
                 match_part,
                 i;
-
+                
             for (i = 0; i < match_num; i++) {
                 match_part = {
                     'subject' : subfeatures[i].get('subject'),
@@ -166,8 +162,8 @@ function(
                     'score' : subfeatures[i].get('score'),
                     'expect' : subfeatures[i].get('expect'),
                     'frame' : subfeatures[i].get('frame'),
-                    'sub_start' : subfeatures[i].get('start') - start + 1,
-                    'sub_end' : subfeatures[i].get('end') - start
+                    'sub_start' : subfeatures[i].get('start') + 1,
+                    'sub_end' : subfeatures[i].get('end')
                 };
                 alignments['matches'].push(match_part);
             }
@@ -178,9 +174,18 @@ function(
             return function() {
                 var feature = this.feature;
                 var alignments = track._renderAlignments(feature);
+                
                 var content = track._renderHTML(alignments);
                 track._showDialog(feature, content);
             };
+        },
+        
+        _displayOverlaps: function(feature) {
+            var overlap = feature.get('overlap'); 
+            if (overlap.length == 0) {
+                return 'blue';
+            } 
+            return 'red';
         },
 
         constructor: function() {
@@ -190,8 +195,9 @@ function(
                 'iconClass' : 'dijitIconDatabase',
                 'action' : this._getAlignmentsFunc(this)
             });
-        }
+            config.style.color = this._displayOverlaps;
         
+        }
     }); 
 }  
 );
