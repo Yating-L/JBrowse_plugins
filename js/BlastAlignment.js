@@ -195,8 +195,8 @@ function(
                 'iconClass' : 'dijitIconDatabase',
                 'action' : this._getAlignmentsFunc(this)
             });
-            config.style.color = this._displayOverlaps;
-        
+            //config.style.color = this._displayOverlaps;
+            config.glyph = 'G-OnRamp_plugin/BlastHit';
         }
     }); 
 }  
