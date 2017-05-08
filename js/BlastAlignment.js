@@ -195,6 +195,13 @@ function(
                 'iconClass' : 'dijitIconDatabase',
                 'action' : this._getAlignmentsFunc(this)
             });
+            config.menuTemplate.push({
+                'label' : 'Color Scheme',
+                'iconClass' : 'dijitIconDatabase',
+                'title' : 'Color Scheme',
+                'action' : 'contentDialog',
+                'content' : function(){return 'Red (score > 500)<br> Brown (score >= 200)<br> Pink (score >= 80) <br> Green (score >= 50)<br> Blue (score >= 40)';}
+            });
             //config.style.color = this._displayOverlaps;
             config.glyph = 'G-OnRamp_plugin/BlastHit';
         }
