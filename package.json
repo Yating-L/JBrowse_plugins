@@ -1,0 +1,22 @@
+{
+  "name": "jbrowse_plugins",
+  "version": "1.0.0",
+  "description": "JBrowse plugins for displaying Gene preditions, BLAST and BLAT alignments tracks",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yating-L/JBrowse_plugins.git"
+  },
+  "keywords": [
+    "G-OnRamp"
+  ],
+  "author": "Yating-L",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yating-L/JBrowse_plugins/issues"
+  },
+  "homepage": "https://github.com/Yating-L/JBrowse_plugins#readme"
+}
