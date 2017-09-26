@@ -1,0 +1,20 @@
+{
+  "name": "gonramp_plugin",
+  "description": "JBrowse plugins for displaying Gene preditions, BLAST and BLAT alignments tracks",
+  "main": "js/main.js",
+  "authors": [
+    "Yating-L"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "G-OnRamp"
+  ],
+  "homepage": "https://github.com/Yating-L/JBrowse_plugins",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
